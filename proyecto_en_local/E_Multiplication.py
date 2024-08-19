@@ -1,21 +1,3 @@
-# E- MULTIPLICACIÓN
-"""
-La E-Multiplicación es una operación (presumiblemente unidireccional) que se define fijando previamente un conjunto de t_values $\mathbb(t)$:
-
-$$ \star : (GL(N, \mathbb{F}_{q}) \times \mathbb{S}_{N}) \times \mathbb{B}_{N} ⟶ GL(N, \mathbb{F}_{q}) \times \mathbb{S}_{N} $$
-$$ (M, \sigma) \star \beta ≡ (M, \sigma) \star (CB(\beta), \sigma_{\beta})$$
-
-La diferencia con el producto que se realiza para la generación de matrices de Burau arbitrarias a partir de las asociadas a generadores únicos, es que tras aplicar la permutación a los t_values, estos deben ser evaluados en el conjunto $\mathbb{t}$ fijado en la definición de la E-Multiplicación:
-
-$$ (M, \sigma) \star (CB(b_{i}^{\pm1}), \sigma_{b_i}) = ( M ⋅ {}^{\sigma}\!(CB(b_i^{\pm1}))_{↓t-values}, \sigma\sigma_{b_i}) $$
-$$ (M, \sigma) \star (CB(\beta), \sigma_{\beta}) = (M, \sigma) \star (CB(b_{1}^{e_1}), \sigma_{b_1}) \star (CB(b_{k}^{e_k}), \sigma_{b_k}) $$
-
-La función `Eval_CB_EMult` se utilizará auxiliarmente para calcular los términos ${}^{\sigma}\!(CB(b_i^{\pm1}))_{↓t-values}$ que aparecen en el desarrollo de la E-Multiplicación. Resuelve el problema de integrar las variables Sympy con los coeficientes de las matrices de Burau, que pertenecen al cuerpo finito en cuestión. No es posible evaluar dichas matrices con elementos pertenecientes a $\mathbb{F}_q$ ni operar dentro de tales cuerpos con variables `Sympy`. Se vuelve imposible así evaluar directamente la expresión mencionada en los t_values que definen la E-Multiplicación.
-
-Como solución, la E-Multiplicación  $(M, \sigma) \star (CB(\beta), \sigma_{\beta})$ se desarrolla en productos únicamente de matrices de Burau de generadores (o inversos), donde la evaluación de los t_values como enteros no corre ningún peligro de pérdida de información, dado que tras la evaluación de las variables estas no se van a operar con ningún otro entero (salvo su propia inversión), por la simpleza de tal representación para los generadores.
-
-Trabajaremos, con los t_values como variables enteras, se evaluarán con valores enteros (t_values) y antes devolver el resultado, se preparán los t_values que sí que han sufrido una transformación en $\mathbb{R}$, la inversión. Para ello, simplemente, se buscará dentro la matriz los elementos no enteros (ningún inversos en $\mathbb{Z}$ es entero, salvo el 1 que es su propio inverso), se volverán a invertir para recuperar los t_values originales y se sustituirán por su inversos, esta vez sí, en $\mathbb{F}_{q}$.
-"""
 
 from Burau_representation import *
 from pyfinite import ffield
@@ -70,7 +52,7 @@ def Mult_Matrix_CF(matriz1, matriz2, gradoCF):
 
   return resultado
 
-  # Función para E-Multiplicar (M, permutacionM)*(palabra, permutacionPalabra)
+# Función para E-Multiplicar (M, permutacionM)*(palabra, permutacionPalabra)
 def E_Multiplicacion(M, permutacionM, palabra,
                     gradoBn, gradoCF, t_values, eval):
 
@@ -96,6 +78,8 @@ def E_Multiplicacion_P(palabra, gradoBn, gradoCF, t_values, eval):
 
 if __name__ == "__main__":
 
+  print("\nEJEMPLO DE EJECUCIÓN DE 'Eval_CB_EMult':\n")
+  
   # Creamos el campo finito de 32 elementos (2^5)
   F32 = ffield.FField(5)
 
@@ -110,21 +94,13 @@ if __name__ == "__main__":
 
   CB_prueba = Eval_CB_EMult(generador, gradoBn, gradoCF, permutacion, t_values,
                             eval)
-  print(f"\nCB del generador {generador} tras aplicar la corrección de \
-  inversión:\n", np.array(CB_prueba))
-
-  # Listamos los inversos de cada elemento
-  print("\nListamos los inversos de cada elemento:")
-  for i in range(32):
-    if(i != 0):
-      inverso = F32.Inverse(i)
-      print("Elemento {}: {}  -->   Inverso {} : {}".format(str(i).rjust(2),
-              F32.ShowPolynomial(i).ljust(25), str(inverso).rjust(2),
-              F32.ShowPolynomial(inverso)))
-
-  """La función `Mult_Matrix_CF` multiplica dos matrices con elementos en el campo finito CF(2^gradoCF). Es necesaria por la representación que utiliza la biblioteca FField para los campos finitos, donde los elementos son expresados por sus identificadores, y la sintaxis aritmética convencional ('+', '-', '*', ...) opera sobre los identificadores como enteros y no sobre los verdaderos elementos del cuerpo finito. Para operar sobre el cuerpo finito es necesario llamar a la funciones Add, Subtract, Multiply, ...; por lo que creamos esta función que internamente utilizará estos métodos de FField para implementar la multiplicación de matrices."""
+  print(f"\nCB evaluada del generador {generador} tras aplicar la corrección de \
+inversión:\n", np.array(CB_prueba))
+  
 
 
+
+  print("\nEJEMPLO DE EJECUCIÓN DE 'Mult_Matrix_CF':\n")
 
   # Ejemplo de multiplicación para 2 matrices de Burau ya permutadas y evaluadas
   # (preparadas como términos de la E-Multiplicación)
@@ -134,7 +110,6 @@ if __name__ == "__main__":
   gradoCF = 5
   permutacion1 = ProyectarSn([], 10)
   permutacion2 = ProyectarSn([generador2], 10)
-  print("Permutaciones aplicadas a los t_values:\n", permutacion1, permutacion2)
   t1, t2, t3, t4, t5, t6, t7,t8,t9,t10 = symbols('t1 t2 t3 t4 t5 t6 t7 t8 t9 t10')
   t_values = np.array([t1, t2, t3, t4, t5, t6, t7, t8, t9, t10])
   eval = np.array([15,10,1,1,4,17,8,7,21,7])
@@ -146,18 +121,15 @@ if __name__ == "__main__":
   # Multiplicamos CB_prueba1 y CB_prueba2 en el cuerpo CF(2^gradoCF)
   resultado = Mult_Matrix_CF(CB_prueba1, CB_prueba2, gradoCF)
 
-  print(f"\nCB del generador {generador1}:\n", np.array(CB_prueba1))
-  print(f"\nCB del generador {generador2}:\n", np.array(CB_prueba2))
+  print(f"\nCB_prueba1 (=CB evaluada del generador {generador1}):\n", np.array(CB_prueba1))
+  print(f"\nCB_prueba2 (=CB evaluada del generador {generador2}):\n", np.array(CB_prueba2))
   print(f"\n'Multiplicación' en CF(2^{gradoCF}) de CB_prueba1 y CB_prueba2:\n",
         np.array(resultado))
+  
+  
+  print("\n\nEJEMPLO DE EJECUCIÓN DE LA E-MULTIPLICACION COMPLETA:\n") 
 
-  """La función `E_Multiplicacion` utilizará internamente las dos funciones auxiliares que acabamos de implementar, para desarrollar la E-Multiplicación de una trenza arbitraria como el producto secuencial de las E-Multiplicaciones de los generadores de las trenza.
-
-  Implementamos también "E_Multiplicacion_P" para el caso $(M, \sigma) = (Id_N, Id_{S_N})$
-  """
-
-
-  # Datos de la E-Multiplicación
+  print("Datos de la E-Multiplicación:\n")
   gradoBn = 4
   gradoCF = 5
   M = Matrix(np.random.randint(0, 32, size = (gradoBn, gradoBn)))
@@ -177,11 +149,18 @@ if __name__ == "__main__":
   print("\nPalabra trenza = ", trenza.elementos)
   print("\nPermutación trenza = ", trenza.perm)
 
-  print("\n\nE-Multiplicación para M y permM arbitrarias:\n", np.array(E_mult[0]))
+  print("\n\nE-Multiplicación para los datos elegidos:\n")
+  print("Matriz final:\n")
+  pprint(E_mult[0])
   print("\nPermutación final:", E_mult[1])
+
+  print("\n\nEJEMPLO DE EJECUCIÓN DE LA E-MULTIPLICACION TRIVIAL:\n") 
+
 
   # E-Multiplicación para M y permM identidad
   E_mult_P = E_Multiplicacion_P(trenza.elementos, gradoBn, gradoCF, t_values,
                                 eval)
-  print("\n\nE-Multiplicación trivial:\n", np.array(E_mult_P[0]))
-  print("\nPermutación final:", E_mult_P[1])
+  print("E-Multiplicación trivial para los datos elegidos:\n")
+  print("Matriz resultado:\n")
+  pprint(E_mult_P[0])
+  print("\nPermutación resultado:", E_mult_P[1], "\n")

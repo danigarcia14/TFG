@@ -1,18 +1,3 @@
-"""# CLOAKING ELEMENTS
-
-Una vez definida la E-Multiplicación, para cada $(M, \sigma) \in GL(N, \mathbb{F}_q) \times \mathbb{S}_N $ se puede definir el subgrupo $Cloak_{(M, \sigma)} ⊂ \mathbb{B}_N$ formado por las trenzas $\beta$ que verifican
-
-$$ (M, \sigma) \ast \beta = (M, \sigma)$$
-
-para una $\ast$ E-Multiplicación fijada (= conjunto de t_values fijados).
-
-Aplicaremos el siguiente procedimiento para calcular Cloaking Elements de $(M, \sigma)$, dado un conjunto de t-values definitorios de la E-Multiplicación, en el que al menos 2, obviando el primero y el último, son igual 1:
-
-1. Fijamos $a, b$ con $ 1 < a < b < N$ y $t_a = 1 = t_b$
-2. Tomamos un generador $b_i$ cualquiera de $B_n$
-3. Tomamos $w \in \mathbb{B}_N$ verificando $\pi_{w}(i) = \sigma^{-1}(a), \space \pi_{w}(i+1) = \sigma^{-1}(b)$
-4. La trenza $ v = wb_{i}^{2}w^{-1} \in Cloak_{(M, \sigma)}$
-"""
 
 import random
 from E_Multiplication import *
@@ -115,7 +100,8 @@ def Cloaking_Element(permutacionM, t_values, generador, gradoBn):
 
 if __name__ == "__main__":
 
-  # Prueba comprobador t_unos
+  print("\nPRUEBA DE EJECUCIÓN DE 'Comprobador_cloak_t_unos':\n")
+
   gradoBn = 10
   t_values = np.array([1,4,-1,1,1,4,1,7,9,1])
   t_unos = Comprobador_cloak_t_unos(t_values, gradoBn)
@@ -124,31 +110,28 @@ if __name__ == "__main__":
   print("Posiciones de los 2 primeros t_unos: ",
         t_unos)
 
+
+  print("\nPRUEBA DE EJECUCIÓN DE 'Generador_trenza_cloak':\n")
+  
   # Prueba generador trenza auxiliar Cloak
+  print("GENERADOR DE TRENZA AUXILIAR PARA T_UNOS:")
+  
   generador = 6
   permutacionM = ProyectarSn([2,5,4,8,5,-2], gradoBn)
-  print("\nGENERADOR PERMUTACION PARA T_UNOS:")
-  print("Permutacion M:", permutacionM)
+  #print("Permutacion M:", permutacionM)
+  
   # w es la trenza auxiliar que buscabamos para construir el Cloak Element
   w = Generador_trenza_cloak(generador, permutacionM, t_unos, 10)
-  print("Permutacion aleatoria que cumple las restricciones definidas por los\
-  t_unos:", Generador_trenza_cloak(generador, permutacionM, t_unos, 10).perm)
+  print("Permutación aleatoria que cumple las restricciones definidas por los\
+t_unos:", Generador_trenza_cloak(generador, permutacionM, t_unos, 10).perm)
   print("Efectivamente: \n\
   \t rw(generador) = ", w.perm.apply(generador-1))
   print("\t rw(generador + 1) = ", w.perm.apply(generador))
   print("\t r-1(t_unos[0]) = ", (permutacionM**(-1)).apply(t_unos[0]))
   print("\t r-1(t_unos[1]) = ", (permutacionM**(-1)).apply(t_unos[1]))
 
-  # Prueba generador Cloak Element
-  Cloak_Element = Cloaking_Element(permutacionM, t_values, generador, gradoBn)
-  print("\nCloak Element para (M, r) y los t_values fijados:\n",
-        Cloak_Element.elementos)
-
-  """Comprobemos ahora que efectivamente cualquier $\beta$ Cloak Element que generamos mediante la función Cloaking_Element() desaparece al multiplicarse por la derecha para los $(M, \sigma)$ y la E-Multiplicación fijados:
-
-  $$ (M, \sigma) \ast \beta = (M, \sigma)$$
-
-  """
+  
+  print("\nPRUEBA DE EJECUCIÓN DE 'Cloaking_Element':\n")
 
   # M y permM arbitrarias
   gradoBn = 8
@@ -158,14 +141,6 @@ if __name__ == "__main__":
   t1, t2, t3, t4, t5, t6, t7,t8 = symbols('t1 t2 t3 t4 t5 t6 t7 t8')
   t_values = np.array([t1, t2, t3, t4, t5, t6, t7, t8])
   eval = np.array([20,1,3,4,4,17,1,10])
-
-  # Calculamos un Cloak Element para M, permM y los t_values elejidos
-  print("NOTA: PARA CONSEGUIR QUE CALCULE UN CLOACK ELEMENT EN TODAS LAS\
-  EJECUCIONES EN UN \nTIEMPO RAZONABLE, HEMOS TENIDO QUE PERMITIR UNA LONGITUD \
-  PARA TRENZA AUXILIAR DE \nHASTA 10*gradoBN. \nSupononemos que para longitudes \
-  menores es más difícil combinar los generadores satisfaciendo los requisitos\
-  . Al aumentar la longitud \nestos requisitos se vuelven equiprobables con el \
-  resto de posibilidades.\n\n")
 
   Cloak_Element = Cloaking_Element(permutacionM, eval, 3, gradoBn)
 
@@ -181,5 +156,5 @@ if __name__ == "__main__":
   print("EVAL", eval)
   E_mult_Cloaking_Element0 = E_Multiplicacion(M, permutacionM,
     Cloak_Element.elementos, gradoBn, gradoCF, t_values, eval)
-  print("\nE-Multiplicación para M y permM:\n", np.array(E_mult_Cloaking_Element0[0]))
-  print("\nPermutación final:", E_mult_Cloaking_Element0[1])
+  print("\nE-Multiplicación para M y permM por Cloak-Element:\n", np.array(E_mult_Cloaking_Element0[0]))
+  print("\nPermutación final:", E_mult_Cloaking_Element0[1], "\n")

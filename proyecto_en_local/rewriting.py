@@ -1,23 +1,4 @@
-# REWRITING
-"""
-El último paso de la generación de la firma WalnutDSA consiste en la reescritura de la palabra representante de una trenza. El algoritmo de reescritura debe generar una nueva palabra equivalente que oculte suficientemente a la inicial.
 
-En este caso, hemos elegido el algoritmo de reescritura estocástico descrito en ***Kayawood, a Key Agreement Protocol; Section 7***.
-
-Se definirá un nuevo sistema de generadores del grupo $\mathbb{B_8}$, que seguirá cumpliendo la relaciones del grupo:
-
-$$ σ_{i}σ_{i+1}σ_{i} = σ_{i+1}σ_{i}σ_{i+1} $$
-$$ σ_{i}σ_{j} = σ_{j}σ_{i}, \ |i-j| > 1;  $$
-
-(reescritas para el nuevo sistema), además de otras que emergerán de la nueva representación. Aplicando sus correspondientes equivalencias, conseguiremos ocultar la palabra en cuestión.
-
-**PARTICIÓN $\mathcal{P}(N-1)$**
-
-Primero, se elige una partición para el orden del anterior grupo trenzando, en este caso $8-1=7$. Por tanto, se define $\mathcal{P}(7) = \{p_1, p_2, ..., p_l\}$, con $3 \leq p_i$, de forma que:
-$$ 7 = p_1 + p_2 + ... + p_l $$
-
-Elegimos $p_1 = 3,\:\: p_2 = 4$
-"""
 from braid import *
 import random
 
@@ -43,25 +24,6 @@ def GeneradorSecuenciaRParticion(particion):
     R.append(R[-1] + i)    # ri = ri-1 + pi-1
 
   return R
-
-"""
-Para ser capaces de gestionar esto, almacenaremos todas las posibles representaciones que se obtienen directamente de la relación, como lógicas de detección. Esto se debe a que no son palabras exactas, ya que dependen de los índices $(i,j)$. La idea es almacenar las 10 posibles 2-subpalabras ($u$) aplicables por la relación, con su correspondientes 3-subpalabras ($L^{-1}R^{-1}$) por las que se sustituirán.
-
-Presentamos dicha correspondencia en términos de $i, j$ y $\mu$:
-
-*   1 $y_jy_i = y_iy_{j-1}y_{r_{μ+1}-1}^{-1}$       
-*   2 $y_iy_{j-1} = y_jy_iy_{r_{μ+1}-1}$            
-*   3 $y_{j-1}y_{r_{μ+1}-1}^{-1} = y_i^{-1}y_jy_i$  
-*   4 $y_iy_{r_{μ+1}-1} = y_j^{-1}y_iy_{j-1}$       
-*   5 $y_i^{-1}y_j = y_{j-1}y_{r_{μ+1}-1}^{-1}y_i^{-1}$       
-*   6 $y_j^{-1}y_i = y_iy_{r_{μ+1}-1} y_{j-1}^{-1}$       
-*   7 $y_{r_{μ+1}-1}^{-1}y_i^{-1} = y_{j-1}^{-1}y_i^{-1}y_j$      
-*   8 $y_{r_{μ+1}-1}y_{j-1}^{-1} = y_i^{-1}y_j^{-1}y_i$       
-*   9 $y_{j-1}^{-1}y_i^{-1} = y_{r_{μ+1}-1}^{-1}y_i^{-1}y_j^{-1}$       
-*   10 $y_i^{-1}y_j^{-1} = y_{r_{μ+1}-1}y_{j-1}^{-1}y_i^{-1}$      
-
-Implementamos el método `RewriteSubW` que recibirá una potencial 2-subpalabra y, en caso de corresponderse con alguna de estas 10 correspondencias, devolverá la 3-subpalabra correspondiente:
-"""
 
 # Función auxiliar para RewriteSubW - Caso Correspondencia 1
     # pasamos la correspondencia como una lista 'correspondencia_l' para simular
@@ -551,50 +513,10 @@ def StochasticRewriting(w_ArtinGen, ArtinGen_p, yGen_p):
   return w_final
 
 
+particion = [3,4]   # Partición a partir de la cual se genera el nuevo sistema
+R = GeneradorSecuenciaRParticion(particion)   # Secuencia de R-valores
 
 
-# Elegimos partición P(8)
-particion = [3,4]
-print("¿La partición elegida es adecuada?", ComprobadorParticion(7, particion))
-
-"""Se sigue definiendo una colección $R = \{r_1, r_2, ..., r_{l+1}\}$ ($r_1 = 1, \:\:r_i = r_{i-1} + p_{i-1}$), en nuestro caso $R_{\mathcal{P(7)}} = \{r_1, r_2, r_3\}$:
-
-
-*   $ r_1 = 1 $
-*   $ r_2 = r_1 + p_1 = 4 $
-*   $ r_3 = r_2 + p_2 = 8 $
-"""
-
-R = GeneradorSecuenciaRParticion(particion)
-print("La secuencia de valores R generadores a partir de", particion, "es:\nR =",
-      R)
-
-"""Esta colección nos permite definir $yGen(\mathcal{P})$, el nuevo conjunto de generadores:
-
-*   $y_1 = b_1b_2 \cdots  b_{r_2-1}$
-*   $y_2 = b_2 \cdots b_{r_2-1}$
-*   $\cdots$
-*   $y_{r_2-1} = b_{r_2-1}$
-*   $y_{r_2} = b_{r_2}b_{r_2+1} \cdots b_{r_3-1}$
-*   $y_{r_2+1} = b_{r_2+1} \cdots b_{r_3-1}$
-*   $\cdots$
-*   $y_{r_3-1} = b_{r_3-1}$
-*   $y_{r_3} = b_{r_3}b_{r_3+1} \cdots b_{r_4-1}$
-*   $\cdots$
-*   $y_{r_{l+1}-1} = y_{N-1} = b_{r_{l+1}-1} = b_{N-1}$
-
-Para nuestra partición $\mathcal{P(7)}$:
-
-*   $y_1 = b_1b_2b_3$
-*   $y_2 = b_2b_3$
-*   $y_3 = b_3$
-*   $y_4 = b_4b_5b_6b_7$
-*   $y_5 = b_5b_6b_7$
-*   $y_6 = b_6b_7$
-*   $y_7 = b_7$
-
-Implementemos la colección de generadores como trenzas:
-"""
 
 # Colección de palabras que representan los yGeneradores(P(8))
 y1_p = [1,2,3]
@@ -616,23 +538,6 @@ y6 = Braid(8, yGen_p[5])
 y7 = Braid(8, yGen_p[6])
 yGen = [y1, y2, y3, y4, y5, y6, y7]
 
-print("Colección de y-Generadores:")
-for i in range(7):
-  print("y{} = {}".format(i+1, yGen[i].showBraid()))
-
-"""Nos será útil expresar los generadores de Artin en el nuevo sistema implmentado, permitiendo así también fácilmente el paso de generadores de Artin al nuevo sistema:
-
-*   $b_1 = y_1y_2^{-1}$
-*   $b_2 = y_2y_3^{-1}$
-*   $b_3 = y_3$
-*   $b_4 = y_4y_5^{-1}$
-*   $b_5 = y_5y_6^{-1}$
-*   $b_6 = y_6y_7^{-1}$
-*   $b_7 = y_7$
-
-Implementemos la colección de generadores como palabras:
-"""
-
 # Generadores de Artin en función del nuevo sistema de generadores
 b1_yp = [1, -2]
 b2_yp = [2, -3]
@@ -642,67 +547,31 @@ b5_yp = [5, -6]
 b6_yp = [6, -7]
 b7_yp = [7]
 ArtinGen_p = [b1_yp, b2_yp, b3_yp, b4_yp, b5_yp, b6_yp, b7_yp]
-print("Colección de generadores de Artin expresados en el nuevo sistema:")
-for i in range(7):
-  print("y{} = {}".format(i+1, ArtinGen_p[i]))
-
-"""El siguiente paso es dominar la detección de la relación emergente de la nueva representación:
-$$y_jy_i = y_iy_{j-1}y_{r_{μ+1}-1}^{-1}, \:\:\:\: r_\mu \leq i < j < r_{\mu+1}, \:\: \mu \in \{1, ..., l\}  $$
-
-El algoritmo estocástico de reescritura deberá detectar cuándo es aplicable esta relación. Para ello, seleccionará algunas potenciales subpalabras $u$ de longitud 2, de forma que si en la relación (una de sus representaciones) se admite el caso $LuR = 1$, se sustituirá $u$ por $L^{-1}R^{-1}$.
-"""
 
 if __name__ == "__main__":
 
-  subpalabra = [-3, -3, -2, -1]
-  print(subpalabra)
-  correspondencia = RewriteSubW(subpalabra, R)
-  print(correspondencia)
 
-  """A esta relación emergente (ya dominada) de la nueva representación, hay que sumarle las 2 relaciones definitorias del grupo trenzado:
+  print("\nDEFINICIÓN DE UN NUEVO SISTEMA GENERADOR PARA EL GRUPO TRENZADO B8:\n")
+  # Elegimos partición P(8)
+  print("Partición elegida:", particion)
+  print("¿La partición elegida es adecuada?", ComprobadorParticion(7, particion))
 
-  $$ σ_{i}σ_{i+1}σ_{i} = σ_{i+1}σ_{i}σ_{i+1} $$
-  $$ σ_{i}σ_{j} = σ_{j}σ_{i}, \ |i-j| > 1;  $$
-
-  Ambas relaciones se añadirán a la ya implementada emergente, aunque estas se aplicarán tras completar la reescritura sobre el sistema $yGen(\mathcal{P})$, una vez vuelto a los generadores de Artin. Esto se propone así debido a que no obtenemos ninguna ganancia por intentar detectar estas dos relaciones reescritas en el nuevo sistema, mientras que su implementación sí que aumentaría en dificultad.
-
-  Implementamos sus métodos de detección y reescritura:
-  """
+  print("\nLa secuencia de valores R generadores a partir de", particion, "es:\nR =",
+        R)
 
 
+  print("\nColección de y-Generadores:")
+  for i in range(7):
+    print("y{} = {}".format(i+1, yGen[i].showBraid()))
 
-  print("Ejemplos de correspondecias a la 2-subpalabras:\n")
-  subpalabra1 = [2, 4]
-  print("Subpalabra 1:", subpalabra1)
-  correspondencia1 = RewriteConm1(subpalabra1)
-  print("Correspondencia 1:", correspondencia1)
 
-  subpalabra2 = [-2, -3, -2]
-  print("Subpalabra 2:", subpalabra2)
-  correspondencia2 = RewriteConm2(subpalabra2)
-  print("Correspondencia 2:", correspondencia2)
-
-  """Una vez implementados tanto el nuevo sistema generador como la detección de las 2-subpalabras susceptibles de ser aplicadas por la relación
-  $$y_jy_i = y_iy_{j-1}y_{r_{μ+1}-1}^{-1}, \:\:\:\: r_\mu \leq i < j < r_{\mu+1}, \:\: \mu \in \{1, ..., l\},  $$
-  y sus equivalencias, podemos implementar el algoritmo estocástico de escritura.
-
-  Se siguen secuencialmente los siguientes pasos para reescribir una palabra $w$:
-
-  1.   Se expresa $w$ en el sistema $yGen(\mathcal{P})$, $w ⟼ w_{yGen(\mathcal{P})}$
-  2.   Se divide $w_{yGen(\mathcal{P})}$ en bloques $Block_1, Block_2, ..., Block_k$, con $5 \leq length(Block_i) \leq 10$  
-  3.   Para cada $Block_i$, se elige una 2-subpalabra $u_i$
-  4.   Para cada 2-subpalabra $u_i$, se trata de aplicar alguna relación $SRel(\mathcal(P))$, intercambiándose por su correspondencia si es posible y, manteniéndose invariante $u_i$, en caso de que no.
-  5.   Se concantenan los nuevos bloques modificados y se aplica reducción libre en el sistema $yGen(\mathcal{P})$.
-  6.   Se repite la secuencia de pasos 2-5 lo necesario, expresando la palabra final $w_{yGen(\mathcal{P})}'$ final en generadores de Artin, $w_{yGen(\mathcal{P})}' ⟼ w'$
-  7.  Se repiten los pasos 2-5 en el sistema de generadores de Artin, tratando de aplicar la primera conmutación a 2-subpalabras
-  8. Se repiten los pasos 2-5 en el sistema de generadores de Artin, tratando de aplicar la primera conmutación a 3-subpalabras
-
-  **Conversión del sistema generador**
-  """
+  print("\nColección de generadores de Artin expresados en el nuevo sistema:")
+  for i in range(7):
+    print("y{} = {}".format(i+1, ArtinGen_p[i]))
 
 
 
-  print("CONVERSIÓN: Generadores de Artin --> yGen(P)")
+  print("\nPRUEBA DE EJECUCIÓN DE CONVERSIONES: Generadores de Artin --> yGen(P)")
   print("\nGenedores de Artin expresados en el sistema yGen(P)")
   for i in range(7):
     print("Generador de Artin {} --> Generadores yGen(P) {}".format(i+1,
@@ -727,18 +596,14 @@ if __name__ == "__main__":
   print("YGen(P) --> Artin --> YGen(P) (R.Libre) -->",
         ReduccionLibre(YGenToArtinGen(ArtinGenToYGen(w, ArtinGen_p), yGen_p)))
 
-  """**División de $w_{yGen(\mathcal{P})}$ en bloques**"""
-
-
+  print("\nPRUEBA DE EJECUCIÓN DE LA DIVISIÓN EN BLOQUES:\n")
 
   palabra_sin_dividir = list(range(20,0, -1))
   palabra_en_bloques = DivisionPalabraEnBloques(palabra_sin_dividir, 5,10)
   print("Palabra original:", palabra_sin_dividir)
   print("Palabra dividida en bloques de longitud en [5,10]:", palabra_en_bloques)
 
-  """**Extracción aleatoria de 2-subpalabra por bloque**"""
-
-
+  print("\nPRUEBA DE EJECUCIÓN DE LA EXTRACCIÓN DE 2-PALABRAS:\n")
 
   palabra_inicial = [1, -1, 2, 7, -4, 5]
   longitud = 2
@@ -748,14 +613,7 @@ if __name__ == "__main__":
                                                     palabra_extraida[0]))
   print("Posición inIcial de la palabra extraída:", palabra_extraida[1])
 
-  """**Aplicación de $SRel(\mathcal(P))$**"""
-
-  # Recorre los bloques que dividen la palabra, extrae para cada uno una
-  # 2-subpalabra, trata de aplicar S(Rel(P)), Conmutación1 o Conmutación 2 y, en
-  # caso éxito, sustituye dentro del bloque la 2-subpalabra por su correspondencia
-    # Si regla == 1 --> Se trata de aplicar la primera conmutación bibj = bjbi
-    # Si regla == 2 --> Se trata de aplicar la segunda conmutación bibi+1bi = bi+1bibi+1
-    # Por defecto   --> Se trata de aplicar S(Rel(P))
+  print("\nPRUEBA DE EJECUCIÓN DE LA APLICACIÓN DE SREL(P):\n")
 
   palabra_sin_dividir = list(range(7,0, -1)) + list(range(7, 0, -1))
   palabra_en_bloques = DivisionPalabraEnBloques(palabra_sin_dividir, 5, 10)
@@ -781,7 +639,7 @@ if __name__ == "__main__":
   print("\nPalabra dividida en bloques tras aplicar Conmutador2 a 3-subpalabras:\n",
         bloques_Conm2)
 
-  """**Concatenación y Reducción Libre de bloques modificados**"""
+  print("\nPRUEBA DE EJECUCIÓN DE LA CONCATENACIÓN Y REDUCCIÓN LIBRE:\n")
 
 
 
@@ -797,11 +655,7 @@ if __name__ == "__main__":
   print(palabray)
   RewriteSubW(palabray, R)
 
-  """**ALGORITMO DE REESCRITURA ESTOCÁSTICO**"""
-
-
-
-  import random
+  print("\nPRUEBA DE EJECUCIÓN DEL ALGORITMO DE REESCRITURA COMPLETO:\n")
 
   # Generaramos una palabra aleatoria de longitud 100
   #palabra_original = ReduccionLibre([random.choice([-7, -6, -5, -4, -3, -2, -1, 1,
@@ -813,5 +667,5 @@ if __name__ == "__main__":
   print("Palabra reescrita por Algoritmo Estocástico:", palabra_reescrita)
   print("Longitud palabra reescrita:", len(palabra_reescrita))
 
-  print("¿SE HA APLICADO ALGÚN CAMBIO?", palabra_original != palabra_reescrita)
+  print("¿SE HA APLICADO ALGÚN CAMBIO?", palabra_original != palabra_reescrita, "\n")
 

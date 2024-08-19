@@ -1,16 +1,8 @@
 # TRENZAS
-"""
-Comencemos definiendo la clase `Braid`. Las instancias de esta clase almacenarán el grado del grupo n-ésimo trenzado al que pertenecen (este dato identifica completamente al grupo) y la palabra que representa la trenza, formada por generadores del grupo en cuestión. Por ahora, no hacemos referencia a las restricciones naturales para los generadores de los grupos de Artin que modelan los grupos trenzados:
 
-$$ σ_{i}σ_{i+1}σ_{i} = σ_{i+1}σ_{i}σ_{i+1} $$
-$$ σ_{i}σ_{j} = σ_{j}σ_{i}, \ |i-j| > 1  $$
-
-Esto no nos impedirá implementar la operación del grupo $\mathbb{B}_{n}$, la concatenación (no reducida), desde ya.
-"""
 
 from permutation import *
 #from sympy.combinatorics import Permutation
-
 
 # Clase que representará a las trenzas
 class Braid:
@@ -142,15 +134,17 @@ def ReduccionLibre(palabra):
 
 if __name__ == "__main__":
 
+  print("\nOPERACIONES BÁSICAS CON TRENZAS:\n")
+
   # Ejemplos de construcción, concatenación y visualización
   trenza = Braid(5, [-8, 1,2,3])
-  print("Trenza 1:", trenza.showBraid(), "Grado:", trenza.grado)
+  print("Trenza 1:", trenza.showBraid(), "--> Grado:", trenza.grado)
 
   trenza2 = Braid(elementos = [1,-2, -6])
-  print("Trenza 2:", trenza2.showBraid(), "Grado:", trenza2.grado)
+  print("Trenza 2:", trenza2.showBraid(), "--> Grado:", trenza2.grado)
 
   trenza_concatenada = trenza.concatenateBraid(trenza2)
-  print("\nTrenza concantenada:", trenza_concatenada.showBraid(), "Grado:",
+  print("\nTrenza concantenada:", trenza_concatenada.showBraid(), "--> Grado:",
         trenza_concatenada.grado)
 
   trenza_sin_inversion = Braid(5, [2, -3, 2, 1])
@@ -159,27 +153,13 @@ if __name__ == "__main__":
   print("Trenza invertida:", trenza_inversa.elementos)
 
   print("\nPERMUTACIONES ASOCIADAS")
-  print("\nPermutacion de la trenza 1:")
-  print(trenza.perm)
-  print("Permutacion de la trenza 2:")
-  print(trenza2.perm)
-  print("Permutacion de la trenza concantenada:")
-  print(trenza_concatenada.perm)
+  print("\nPermutación de la trenza 1:", trenza.perm)
+  print("Permutación de la trenza 2:", trenza2.perm)
+  print("Permutación de la trenza concantenada:", trenza_concatenada.perm)
 
-  """El método de clase `TrenzaFundamental(n,i)` nos permite obtener una representación (palabra) de la trenza fundamental de grado n, utilizando la propuesta del artículo "Malhburg". Este método pivota sobre un generador fijado, que nosotros pasamos como parámetro i:
-  $$Δ_{n} = (\sigma_{i})(\sigma_{i+1}\sigma_{i})***(\sigma_{n-1}\sigma_{i})
-  (\sigma_{i-1}\sigma_{i}...\sigma_{n-1})***(\sigma_{1}\sigma_{n-1})$$
-
-  Aclaramos que esta no es la única representación de la trenza fundamental; incluso el teorema utilizado presenta otra representación que pivota sobre el mismo generador. Simplemente la hemos escogido por su simplicidad y se utilizará de aquí en adelante.
-
-  IMPORTANTE: NO TENEMOS CLARO SI PARA LOS CASOS EXTREMOS (i=1 ó i=n) LA TRENZA FUNDAMENTAL IMPLEMENTADA ES LA CORRECTA!!!
-
-            
-  """
-
-  # Trenzas fundamentales de grado 4
+  print("\nTRENZAS FUNDAMENTALES:\n")  
   trenzaFundamental_4_1 = Braid(10, Braid.TrenzaFundamental(4, 1))
-  print("\nTrenza fundamental de grado 4 (\"pivotando\" desde el generador 1):")
+  print("Trenza fundamental de grado 4 (\"pivotando\" desde el generador 1):")
   print(trenzaFundamental_4_1.showBraid())
 
   trenzaFundamental_4_2 = Braid(10, Braid.TrenzaFundamental(4, 2))
@@ -206,3 +186,4 @@ if __name__ == "__main__":
   trenzaFundamental_10_9 = Braid(10, Braid.TrenzaFundamental(10, 9))
   print("\nTrenza fundamental de grado 10 (\"pivotando\" desde el generador 9):")
   print(trenzaFundamental_10_9.showBraid())
+  print("\n")
