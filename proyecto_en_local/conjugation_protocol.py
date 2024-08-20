@@ -28,7 +28,7 @@ print("Secreto b:", secreto_parte_B.showBraid())
 
 # COMPUTACIÓN DEL CONJUGADO A ENVIAR POR CADA PARTE
 
-print("\COMPUTACIÓN DEL CONJUGADO A ENVIAR POR CADA PARTE:\n")
+print("\nCOMPUTACIÓN DEL CONJUGADO A ENVIAR POR CADA PARTE:\n")
 
 # Conjugado que calcula la parte A
 conjugado_parte_A = secreto_parte_A.concatenateBraid(trenza_compartida_x).concatenateBraid(secreto_parte_A.inverseBraid())
@@ -52,7 +52,3 @@ print("Secreto compartido computado por parte B:", Secreto_Compartido_B.elemento
 
 print("¿Han llegado ambas partes al mismo secreto compartido?:",
       Secreto_Compartido_A.elementos == Secreto_Compartido_B.elementos, "\n")
-
-print("Aunque no coincidan las palabras, está demostrado que son equivalentes. \
-Para poder verificarlo habría que implementar la forma canónica de Garside, que \
-      es única para cada trenza salvo equivalencias\n")

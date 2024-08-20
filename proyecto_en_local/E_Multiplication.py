@@ -79,7 +79,7 @@ def E_Multiplicacion_P(palabra, gradoBn, gradoCF, t_values, eval):
 if __name__ == "__main__":
 
   print("\nEJEMPLO DE EJECUCIÓN DE 'Eval_CB_EMult':\n")
-  
+
   # Creamos el campo finito de 32 elementos (2^5)
   F32 = ffield.FField(5)
 
@@ -95,8 +95,8 @@ if __name__ == "__main__":
   CB_prueba = Eval_CB_EMult(generador, gradoBn, gradoCF, permutacion, t_values,
                             eval)
   print(f"\nCB evaluada del generador {generador} tras aplicar la corrección de \
-inversión:\n", np.array(CB_prueba))
-  
+  inversión:\n", np.array(CB_prueba))
+
 
 
 
@@ -125,7 +125,7 @@ inversión:\n", np.array(CB_prueba))
   print(f"\nCB_prueba2 (=CB evaluada del generador {generador2}):\n", np.array(CB_prueba2))
   print(f"\n'Multiplicación' en CF(2^{gradoCF}) de CB_prueba1 y CB_prueba2:\n",
         np.array(resultado))
-  
+
   
   print("\n\nEJEMPLO DE EJECUCIÓN DE LA E-MULTIPLICACION COMPLETA:\n") 
 

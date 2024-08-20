@@ -642,7 +642,6 @@ if __name__ == "__main__":
   print("\nPRUEBA DE EJECUCIÓN DE LA CONCATENACIÓN Y REDUCCIÓN LIBRE:\n")
 
 
-
   print("Palabra dividida en bloques tras aplicar SRel(P) a 2-subpalabras:\n",
         bloques_SRelP)
 

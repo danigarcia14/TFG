@@ -109,7 +109,7 @@ elif args.mensaje:
     m = args.mensaje.encode()
 
 
-print("\nCÁLCULO DEL HASH DEL MENSAJE A FIRMAR:\n")
+print("\nPASO 2 - CÁLCULO DEL HASH DEL MENSAJE A FIRMAR:\n")
 print("Mensaje a firmar:", m)
 
 start_time_hash = time.time()
@@ -119,7 +119,7 @@ print("\n\nSalida binaria del Hash del mensaje:", Hm)
 
 # PASO 3 - CODIFICACIÓN DEL HASH AL GRUPO TRENZADO ACORDADO
 
-print("\nCODIFICACIÓN DEL HASH AL GRUPO TRENZADO ELEGIDO:\n")
+print("\nPASO 3 - CODIFICACIÓN DEL HASH AL GRUPO TRENZADO ELEGIDO:\n")
 
 # Codificamos m a BN
 start_time_encoder = time.time()
@@ -133,7 +133,7 @@ print("Permutación proyectada por la trenza codificada:", EHm.perm)
 
 # PASO 4 - CÁLCULO DE LA FIRMA
 
-print("\nCÁLCULO DE LA FIRMA:\n")
+print("\nPASO 4 - CÁLCULO DE LA FIRMA:\n")
 
 # Calculamos Sig
 start_time_sig = time.time()

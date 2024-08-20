@@ -61,7 +61,7 @@ if __name__ == "__main__":
   # DATOS DEL PROTOCOLO
 
   print("\nDATOS PÚBLICOS DEL PROTOCOLO:\n")
-  
+
   # grado del grupo trenzado sobre el que construir el protocolo
   N = 8
 
@@ -112,7 +112,7 @@ if __name__ == "__main__":
   # COMPUTACIÓN DEL SECRETO COMPARTIDO TRAS EL INTERCAMBIO DE LOS CONJUNTOS DE PARES
 
   print("\nCOMPUTACIÓN DEL SECRETO COMPARTIDO TRAS EL INTERCAMBIO DE LOS CONJUNTOS DE PARES:\n")
-  
+
   # Secretos compartidos computados por cada parte
   Secreto_Compartido_A = Braid(N, ReduccionLibre(calcular_secreto_compartido(secreto_a, Pares_B)))
   Secreto_Compartido_B = Braid(N, ReduccionLibre(calcular_secreto_compartido(secreto_b, Pares_A))).inverseBraid()

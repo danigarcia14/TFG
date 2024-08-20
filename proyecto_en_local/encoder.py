@@ -153,7 +153,7 @@ if __name__ == "__main__":
   salida de SHA-256)")
 
   # Prueba generador colección de generadores
-  print("\nPRUEBA DE EJECUCIÓN DE 'SubColeccion_Random':\n")
+  print("\nPRUEBA DE EJECUCIÓN DE 'Encoder_gen_sub_pure':\n")
   gradoBn = 8
   coleccion_generadores = Encoder_gen_sub_pure(gradoBn)
   print("Colección de generadores de un subgrupo puro para grado %d:" % gradoBn)

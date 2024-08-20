@@ -139,7 +139,7 @@ if __name__ == "__main__":
   perm_identity = Permutation(range(len(t_values)))
 
   print("\nEJEMPLOS DE CÁLCULO DE MATRICES DE BURAU CON LOS DISTINTOS MÉTODOS IMPLEMENTADOS:\n")
-  
+
   print("Matriz de Burau asociada al generador 9 para el grupo de grado 10:\n")
   pprint(MatrizBurauGenPos(9,10, t_values))
 
@@ -149,7 +149,7 @@ if __name__ == "__main__":
 
   print("\nMatriz de Burau asociada al generador 9 para el grupo de grado 10:\n")
   pprint(MatrizBurauGen(9, 10, t_values))
-  
+
   print("\nMatriz de Burau asociada al inverso del generador 9 para el grupo de\
   grado 10:\n")
   pprint(MatrizBurauGen(-9, 10,t_values))
@@ -225,7 +225,7 @@ if __name__ == "__main__":
 
   print("\nPRUEBAS DE EFICIENCIA ENTRE LOS MÉTODOS 'MatrizBurauID' y 'MatrizBurauDI':")
 
-  # Generamos una palabra larga
+  # Generamos una palabra más larga
   elementos = [1,2,3,4,5,-5,-5,-4,-5,-5]
   elementos_final = []
   for i in range(5):

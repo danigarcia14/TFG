@@ -112,25 +112,25 @@ if __name__ == "__main__":
 
 
   print("\nPRUEBA DE EJECUCIÓN DE 'Generador_trenza_cloak':\n")
-  
+
   # Prueba generador trenza auxiliar Cloak
   print("GENERADOR DE TRENZA AUXILIAR PARA T_UNOS:")
-  
+
   generador = 6
   permutacionM = ProyectarSn([2,5,4,8,5,-2], gradoBn)
   #print("Permutacion M:", permutacionM)
-  
+
   # w es la trenza auxiliar que buscabamos para construir el Cloak Element
   w = Generador_trenza_cloak(generador, permutacionM, t_unos, 10)
   print("Permutación aleatoria que cumple las restricciones definidas por los\
-t_unos:", Generador_trenza_cloak(generador, permutacionM, t_unos, 10).perm)
+  t_unos:", Generador_trenza_cloak(generador, permutacionM, t_unos, 10).perm)
   print("Efectivamente: \n\
   \t rw(generador) = ", w.perm.apply(generador-1))
   print("\t rw(generador + 1) = ", w.perm.apply(generador))
   print("\t r-1(t_unos[0]) = ", (permutacionM**(-1)).apply(t_unos[0]))
   print("\t r-1(t_unos[1]) = ", (permutacionM**(-1)).apply(t_unos[1]))
 
-  
+
   print("\nPRUEBA DE EJECUCIÓN DE 'Cloaking_Element':\n")
 
   # M y permM arbitrarias
